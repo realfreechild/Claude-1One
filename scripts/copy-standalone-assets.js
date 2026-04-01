@@ -2,7 +2,10 @@
  * After `next build` with `output: 'standalone'`, the standalone server
  * does NOT include static assets automatically. This script copies them in.
  *
- * Must be run after `next build` and before `electron-builder`.
+ * It also copies the Electron-rebuilt better-sqlite3 native module into
+ * the standalone node_modules so the packaged app uses the right ABI.
+ *
+ * Must be run after `next build` + `electron-rebuild` and before `electron-builder`.
  */
 const fs = require('fs');
 const path = require('path');
@@ -30,5 +33,15 @@ copyDir(
   path.join(root, 'public'),
   path.join(standalone, 'public')
 );
+
+// Copy Electron-rebuilt better-sqlite3 native module into standalone
+// This overwrites the system-Node.js version that `next build` copied,
+// replacing it with the Electron-compatible .node binary.
+const nativeModuleSrc = path.join(root, 'node_modules', 'better-sqlite3');
+const nativeModuleDest = path.join(standalone, 'node_modules', 'better-sqlite3');
+if (fs.existsSync(nativeModuleSrc) && fs.existsSync(nativeModuleDest)) {
+  copyDir(nativeModuleSrc, nativeModuleDest);
+  console.log('[copy] Overwrote standalone better-sqlite3 with Electron-rebuilt version');
+}
 
 console.log('[copy] Done — standalone is ready for packaging.');

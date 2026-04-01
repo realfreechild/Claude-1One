@@ -13,9 +13,9 @@
 
     "electron:rebuild": "electron-rebuild -f -w better-sqlite3",
 
-    "electron:build": "npm run electron:rebuild && next build && node scripts/copy-standalone-assets.js && electron-builder",
+    "electron:build": "next build && npm run electron:rebuild && node scripts/copy-standalone-assets.js && electron-builder",
 
-    "electron:build:dir": "npm run electron:rebuild && next build && node scripts/copy-standalone-assets.js && electron-builder --dir"
+    "electron:build:dir": "next build && npm run electron:rebuild && node scripts/copy-standalone-assets.js && electron-builder --dir"
   },
   "dependencies": {
     "@mozilla/readability": "^0.6.0",
@@ -61,6 +61,7 @@
         "filter": ["**/*", "!**/*.map"]
       }
     ],
+    "npmRebuild": false,
     "asar": true,
     "asarUnpack": [
       "node_modules/better-sqlite3/**"
