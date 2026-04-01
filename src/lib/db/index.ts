@@ -2,7 +2,11 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 
-const DB_PATH = path.join(process.cwd(), 'data', 'readinglist.db');
+// In packaged Electron, DATA_DIR is set to app.getPath('userData') by the main process.
+// In dev / plain Next.js, fall back to ./data/
+const DB_PATH = process.env.DATA_DIR
+  ? path.join(process.env.DATA_DIR, 'readinglist.db')
+  : path.join(process.cwd(), 'data', 'readinglist.db');
 
 let db: Database.Database | null = null;
 
